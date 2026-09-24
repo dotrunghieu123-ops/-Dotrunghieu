@@ -1,0 +1,130 @@
+using System;
+using System.Windows.Forms;
+
+namespace Calculator
+{
+    public partial class Form1 : Form
+    {
+        double firstNumber = 0;
+        string operation = "";
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            // Gán chung Event Handler cho 10 nút số
+            btn0.Click += NumberButton_Click;
+            btn1.Click += NumberButton_Click;
+            btn2.Click += NumberButton_Click;
+            btn3.Click += NumberButton_Click;
+            btn4.Click += NumberButton_Click;
+            btn5.Click += NumberButton_Click;
+            btn6.Click += NumberButton_Click;
+            btn7.Click += NumberButton_Click;
+            btn8.Click += NumberButton_Click;
+            btn9.Click += NumberButton_Click;
+
+            // Gán sự kiện phép toán
+            btnAdd.Click += OperationButton_Click;
+            btnSubtract.Click += OperationButton_Click;
+            btnMultiply.Click += OperationButton_Click;
+            btnDivide.Click += OperationButton_Click;
+
+            btnEqual.Click += btnEqual_Click;
+            btnClear.Click += btnClear_Click;
+
+            // Màn hình ban đầu
+            txtDisplay.Text = "0";
+        }
+
+        // ==========================================
+        // EVENT CHUNG CHO 10 NÚT SỐ
+        // ==========================================
+        private void NumberButton_Click(object sender, EventArgs e)
+        {
+            // Ép sender về Button
+            Button btn = (Button)sender;
+
+            // Nếu đang là 0 thì thay bằng số mới
+            if (txtDisplay.Text == "0")
+            {
+                txtDisplay.Text = btn.Text;
+            }
+            else
+            {
+                // Nối số vào màn hình
+                txtDisplay.Text += btn.Text;
+            }
+        }
+
+        // ==========================================
+        // XỬ LÝ CÁC PHÉP TOÁN + - * /
+        // ==========================================
+        private void OperationButton_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+
+            // Lưu số thứ nhất
+            firstNumber = double.Parse(txtDisplay.Text);
+
+            // Lưu phép toán
+            operation = btn.Text;
+
+            // Xóa màn hình để nhập số thứ hai
+            txtDisplay.Text = "0";
+        }
+
+        // ==========================================
+        // NÚT =
+        // ==========================================
+        private void btnEqual_Click(object sender, EventArgs e)
+        {
+            double secondNumber = double.Parse(txtDisplay.Text);
+            double result = 0;
+
+            switch (operation)
+            {
+                case "+":
+                    result = firstNumber + secondNumber;
+                    break;
+
+                case "-":
+                    result = firstNumber - secondNumber;
+                    break;
+
+                case "*":
+                    result = firstNumber * secondNumber;
+                    break;
+
+                case "/":
+                    if (secondNumber == 0)
+                    {
+                        MessageBox.Show(
+                            "Không thể chia cho 0!",
+                            "Lỗi",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+
+                        return;
+                    }
+
+                    result = firstNumber / secondNumber;
+                    break;
+            }
+
+            // Hiển thị kết quả
+            txtDisplay.Text = result.ToString();
+        }
+
+        // ==========================================
+        // NÚT C - CLEAR
+        // ==========================================
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txtDisplay.Text = "0";
+            firstNumber = 0;
+            operation = "";
+        }
+    }
+}
