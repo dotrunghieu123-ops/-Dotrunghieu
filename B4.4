@@ -1,0 +1,113 @@
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+
+namespace FoodOrder
+{
+    public partial class Form1 : Form
+    {
+        // Lưu giá tiền của từng món
+        Dictionary<string, int> prices = new Dictionary<string, int>()
+        {
+            { "Hamburger", 50000 },
+            { "Pizza", 120000 },
+            { "Gà Rán", 35000 },
+            { "Pepsi", 15000 }
+        };
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            // Nạp danh sách món ăn
+            LoadMenu();
+
+            // Gắn sự kiện cho nút
+            btnAdd.Click += btnAdd_Click;
+            btnRemove.Click += btnRemove_Click;
+
+            // Hiển thị tổng tiền ban đầu
+            UpdateTotal();
+        }
+
+        // ==========================================
+        // NẠP DANH SÁCH MÓN ĂN
+        // ==========================================
+        private void LoadMenu()
+        {
+            lstMenu.Items.Add("Hamburger");
+            lstMenu.Items.Add("Pizza");
+            lstMenu.Items.Add("Gà Rán");
+            lstMenu.Items.Add("Pepsi");
+        }
+
+        // ==========================================
+        // NÚT > : CHUYỂN MÓN SANG DANH SÁCH ĐÃ CHỌN
+        // ==========================================
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (lstMenu.SelectedItem != null)
+            {
+                string food = lstMenu.SelectedItem.ToString();
+
+                // Thêm món vào danh sách đã chọn
+                lstSelected.Items.Add(food);
+
+                // Xóa món khỏi danh sách menu
+                lstMenu.Items.Remove(lstMenu.SelectedItem);
+
+                // Cập nhật tổng tiền
+                UpdateTotal();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một món ăn!");
+            }
+        }
+
+        // ==========================================
+        // NÚT < : XÓA MÓN KHỎI DANH SÁCH ĐÃ CHỌN
+        // ==========================================
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (lstSelected.SelectedItem != null)
+            {
+                string food = lstSelected.SelectedItem.ToString();
+
+                // Xóa món khỏi danh sách đã chọn
+                lstSelected.Items.Remove(lstSelected.SelectedItem);
+
+                // Trả món về danh sách menu
+                lstMenu.Items.Add(food);
+
+                // Cập nhật tổng tiền
+                UpdateTotal();
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn món cần xóa!");
+            }
+        }
+
+        // ==========================================
+        // TÍNH TỔNG TIỀN
+        // ==========================================
+        private void UpdateTotal()
+        {
+            int total = 0;
+
+            foreach (var item in lstSelected.Items)
+            {
+                string food = item.ToString();
+
+                if (prices.ContainsKey(food))
+                {
+                    total += prices[food];
+                }
+            }
+
+            // Hiển thị tổng tiền
+            lblTotal.Text = "Tổng tiền: " + total.ToString("N0") + " VNĐ";
+        }
+    }
+}
